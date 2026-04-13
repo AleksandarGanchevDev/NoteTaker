@@ -1,0 +1,303 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="NoteTaker.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:NoteTaker.Models"
+    xmlns:viewmodels="clr-namespace:NoteTaker.ViewModels"
+    x:DataType="viewmodels:MainViewModel"
+    Title="NoteTaker">
+
+    <Grid
+        Padding="18"
+        ColumnDefinitions="260,320,*"
+        RowDefinitions="Auto,Auto,*"
+        ColumnSpacing="16"
+        RowSpacing="14">
+
+        <Grid Grid.ColumnSpan="3"
+                ColumnDefinitions="*,Auto">
+            <VerticalStackLayout Spacing="2">
+                <Label
+                    Text="NoteTaker"
+                    FontSize="30"
+                    FontAttributes="Bold"
+                    TextColor="#F9FAFB"/>
+                <Label
+                    Text="Markdown notes with folders, revisions and drag-and-drop"
+                    Style="{StaticResource SubtleTextStyle}"/>
+            </VerticalStackLayout>
+
+            <Border
+                Grid.Column="1"
+                Padding="12,8"
+                BackgroundColor="#1F2937"
+                Stroke="#374151"
+                StrokeShape="RoundRectangle 12">
+                <Label
+                    Text="{Binding StatusMessage}"
+                    FontSize="12"
+                    TextColor="#D1D5DB"
+                    VerticalOptions="Center"/>
+            </Border>
+        </Grid>
+
+        <!-- Folders -->
+        <Border
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            Style="{StaticResource PanelBorderStyle}">
+
+            <Grid RowDefinitions="Auto,Auto,*"
+                    RowSpacing="12">
+                <Label
+                    Text="Folders"
+                    Style="{StaticResource SectionTitleStyle}"/>
+
+                <Grid
+                    Grid.Row="1"
+                    ColumnDefinitions="*,Auto,Auto"
+                    ColumnSpacing="8">
+                    <Entry
+                        Placeholder="New folder"
+                        Text="{Binding NewFolderName}"/>
+
+                    <Button
+                        Grid.Column="1"
+                        Text="Add"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Command="{Binding AddFolderCommand}"/>
+
+                    <Button
+                        Grid.Column="2"
+                        Text="Delete"
+                        Style="{StaticResource DangerButtonStyle}"
+                        Clicked="DeleteFolderButtonClicked"
+                        IsEnabled="{Binding CanDeleteFolder}"/>
+                </Grid>
+
+                <CollectionView
+                    Grid.Row="2"
+                    ItemsSource="{Binding Folders}"
+                    SelectedItem="{Binding SelectedFolder, Mode=TwoWay}"
+                    SelectionMode="Single"
+                    EmptyView="No folders yet">
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Folder">
+                            <Border Style="{StaticResource CardBorderStyle}">
+                                <Border.GestureRecognizers>
+                                    <DropGestureRecognizer
+                                        AllowDrop="True"
+                                        DragOver="FolderDragOver"
+                                        Drop="FolderDrop"/>
+                                </Border.GestureRecognizers>
+
+                                <Grid ColumnDefinitions="Auto,*"
+                                        ColumnSpacing="10">
+                                    <Label
+                                        Text="📁"
+                                        FontSize="18"
+                                        VerticalOptions="Center"/>
+                                    <Label
+                                        Grid.Column="1"
+                                        Text="{Binding Name}"
+                                        FontAttributes="Bold"
+                                        VerticalOptions="Center"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Border>
+
+        <!-- Notes -->
+        <Border
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            Grid.Column="1"
+            Style="{StaticResource PanelBorderStyle}">
+
+            <Grid RowDefinitions="Auto,Auto,*,Auto"
+                    RowSpacing="12">
+                <Label
+                    Text="{Binding SelectedFolder.Name, StringFormat='Notes in {0}'}"
+                    Style="{StaticResource SectionTitleStyle}"/>
+
+                <HorizontalStackLayout Grid.Row="1"
+                        Spacing="10">
+                    <Button
+                        Text="New note"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Command="{Binding NewNoteCommand}"/>
+
+                    <Button
+                        Text="Delete"
+                        Style="{StaticResource DangerButtonStyle}"
+                        Clicked="DeleteButtonClicked"
+                        IsEnabled="{Binding CanDelete}"/>
+                </HorizontalStackLayout>
+
+                <CollectionView
+                    Grid.Row="2"
+                    ItemsSource="{Binding Notes}"
+                    SelectedItem="{Binding SelectedNote, Mode=TwoWay}"
+                    SelectionMode="Single"
+                    EmptyView="No notes in this folder">
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Note">
+                            <Border Style="{StaticResource CardBorderStyle}">
+                                <Border.GestureRecognizers>
+                                    <DragGestureRecognizer
+                                        CanDrag="True"
+                                        DragStarting="NoteDragStarting"/>
+                                </Border.GestureRecognizers>
+
+                                <VerticalStackLayout Spacing="6">
+                                    <Grid ColumnDefinitions="*,Auto"
+                                            ColumnSpacing="8">
+                                        <Label
+                                            Text="{Binding Title}"
+                                            FontAttributes="Bold"
+                                            LineBreakMode="TailTruncation"
+                                            FontSize="15"/>
+
+                                        <Label
+                                            Grid.Column="1"
+                                            Text="📝"
+                                            FontSize="16"/>
+                                    </Grid>
+
+                                    <Label
+                                        Text="{Binding UpdatedAt, StringFormat='Updated: {0:g}'}"
+                                        Style="{StaticResource SubtleTextStyle}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Label
+                    Grid.Row="3"
+                    Text="Tip: drag a note onto a folder to move it"
+                    Style="{StaticResource SubtleTextStyle}"/>
+            </Grid>
+        </Border>
+
+        <!-- Editor -->
+        <Border
+            Grid.Row="1"
+            Grid.Column="2"
+            Style="{StaticResource PanelBorderStyle}">
+
+            <Grid RowDefinitions="Auto,Auto,*"
+                    RowSpacing="12">
+                <Entry
+                    Placeholder="Note title"
+                    Text="{Binding CurrentTitle}"/>
+
+                <HorizontalStackLayout Grid.Row="1"
+                        Spacing="10">
+                    <Button
+                        Text="Save"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Command="{Binding SaveNoteCommand}"/>
+
+                    <Button
+                        Text="Undo"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Command="{Binding UndoCommand}"
+                        IsEnabled="{Binding CanUndo}"/>
+
+                    <Button
+                        Text="Redo"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Command="{Binding RedoCommand}"
+                        IsEnabled="{Binding CanRedo}"/>
+                </HorizontalStackLayout>
+
+                <Editor
+                    Grid.Row="2"
+                    Placeholder="Write your note in Markdown..."
+                    Text="{Binding CurrentContent}"/>
+            </Grid>
+        </Border>
+
+        <!-- Preview + revisions -->
+        <Grid
+            Grid.Row="2"
+            Grid.Column="2"
+            ColumnDefinitions="*,320"
+            ColumnSpacing="16">
+
+            <Border Style="{StaticResource PanelBorderStyle}">
+                <Grid RowDefinitions="Auto,*"
+                        RowSpacing="12">
+                    <Label
+                        Text="Markdown Preview"
+                        Style="{StaticResource SectionTitleStyle}"/>
+
+                    <Border
+                        Grid.Row="1"
+                        BackgroundColor="#111827"
+                        Stroke="#374151"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="0">
+                        <WebView>
+                            <WebView.Source>
+                                <HtmlWebViewSource Html="{Binding PreviewHtml}"/>
+                            </WebView.Source>
+                        </WebView>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Border
+                Grid.Column="1"
+                Style="{StaticResource PanelBorderStyle}">
+
+                <Grid RowDefinitions="Auto,Auto,*"
+                        RowSpacing="12">
+                    <Label
+                        Text="Saved Revisions"
+                        Style="{StaticResource SectionTitleStyle}"/>
+
+                    <Button
+                        Grid.Row="1"
+                        Text="Restore selected"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Command="{Binding RestoreRevisionCommand}"/>
+
+                    <CollectionView
+                        Grid.Row="2"
+                        ItemsSource="{Binding Revisions}"
+                        SelectedItem="{Binding SelectedRevision, Mode=TwoWay}"
+                        SelectionMode="Single"
+                        EmptyView="No revisions yet">
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:NoteRevision">
+                                <Border Style="{StaticResource CardBorderStyle}">
+                                    <VerticalStackLayout Spacing="4">
+                                        <Label
+                                            Text="{Binding SavedAt, StringFormat='{0:g}'}"
+                                            FontAttributes="Bold"
+                                            FontSize="13"/>
+
+                                        <Label
+                                            Text="{Binding DisplayText}"
+                                            MaxLines="2"
+                                            LineBreakMode="TailTruncation"
+                                            Style="{StaticResource SubtleTextStyle}"/>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</ContentPage>

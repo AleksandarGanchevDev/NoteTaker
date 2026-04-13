@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Style TargetType="ContentPage">
+        <Setter Property="BackgroundColor"
+                Value="#111827"/>
+    </Style>
+
+    <Style x:Key="PanelBorderStyle"
+            TargetType="Border">
+        <Setter Property="BackgroundColor"
+                Value="#1F2937"/>
+        <Setter Property="Stroke"
+                Value="#374151"/>
+        <Setter Property="StrokeThickness"
+                Value="1"/>
+        <Setter Property="Padding"
+                Value="14"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="16"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CardBorderStyle"
+            TargetType="Border">
+        <Setter Property="BackgroundColor"
+                Value="#273449"/>
+        <Setter Property="Stroke"
+                Value="#3B475C"/>
+        <Setter Property="StrokeThickness"
+                Value="1"/>
+        <Setter Property="Padding"
+                Value="12"/>
+        <Setter Property="Margin"
+                Value="0,0,0,10"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="12"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SectionTitleStyle"
+            TargetType="Label">
+        <Setter Property="FontSize"
+                Value="20"/>
+        <Setter Property="FontAttributes"
+                Value="Bold"/>
+        <Setter Property="TextColor"
+                Value="#F9FAFB"/>
+    </Style>
+
+    <Style x:Key="SubtleTextStyle"
+            TargetType="Label">
+        <Setter Property="FontSize"
+                Value="12"/>
+        <Setter Property="TextColor"
+                Value="#9CA3AF"/>
+    </Style>
+
+    <Style x:Key="PrimaryButtonStyle"
+            TargetType="Button">
+        <Setter Property="BackgroundColor"
+                Value="#6366F1"/>
+        <Setter Property="TextColor"
+                Value="White"/>
+        <Setter Property="CornerRadius"
+                Value="10"/>
+        <Setter Property="Padding"
+                Value="14,10"/>
+        <Setter Property="FontAttributes"
+                Value="Bold"/>
+    </Style>
+
+    <Style x:Key="SecondaryButtonStyle"
+            TargetType="Button">
+        <Setter Property="BackgroundColor"
+                Value="#374151"/>
+        <Setter Property="TextColor"
+                Value="#F9FAFB"/>
+        <Setter Property="CornerRadius"
+                Value="10"/>
+        <Setter Property="Padding"
+                Value="14,10"/>
+    </Style>
+
+    <Style x:Key="DangerButtonStyle"
+            TargetType="Button">
+        <Setter Property="BackgroundColor"
+                Value="#B91C1C"/>
+        <Setter Property="TextColor"
+                Value="White"/>
+        <Setter Property="CornerRadius"
+                Value="10"/>
+        <Setter Property="Padding"
+                Value="14,10"/>
+        <Setter Property="FontAttributes"
+                Value="Bold"/>
+    </Style>
+
+    <Style TargetType="Entry">
+        <Setter Property="BackgroundColor"
+                Value="#111827"/>
+        <Setter Property="TextColor"
+                Value="#F9FAFB"/>
+        <Setter Property="PlaceholderColor"
+                Value="#6B7280"/>
+        <Setter Property="HeightRequest"
+                Value="42"/>
+    </Style>
+
+    <Style TargetType="Editor">
+        <Setter Property="BackgroundColor"
+                Value="#111827"/>
+        <Setter Property="TextColor"
+                Value="#F9FAFB"/>
+        <Setter Property="PlaceholderColor"
+                Value="#6B7280"/>
+        <Setter Property="AutoSize"
+                Value="TextChanges"/>
+    </Style>
+
+    <Style TargetType="Label">
+        <Setter Property="TextColor"
+                Value="#E5E7EB"/>
+    </Style>
+</ResourceDictionary>
